@@ -8,6 +8,13 @@ pipeline {
                 git url: 'https://github.com/jessyro/first_pipeline.git', branch: 'main'  // החלף ב-URL של ה-repository שלך
             }
         }
+        stage('Install Dependencies') {
+            steps {
+                echo 'Installing dependencies...'
+                // התקנת pytest
+                sh 'pip3 install pytest'  // מתקין את pytest אם הוא לא מותקן
+            }
+        }
         stage('Build') {
             steps {
                 echo 'Building the project...'

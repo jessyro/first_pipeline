@@ -1,33 +1,75 @@
 pipeline {
     agent any
 
+    environment {
+        // אם יצרת סביבה וירטואלית בתיקיית workspace
+        VENV_PATH = "${workspace}/my_venv"
+    }
+
     stages {
         stage('Checkout') {
             steps {
-                // שולף את הקוד מ-GitHub
-                git url: 'https://github.com/jessyro/first_pipeline.git', branch: 'main'  // החלף ב-URL של ה-repository שלך
+                // שלב זה מבצע את ההורדה של קוד ה-Git
+                checkout scm
             }
         }
+
+        stage('Install Dependencies') {
+            steps {
+                script {
+                    // יצירת סביבה וירטואלית אם לא קיימת
+                    sh """
+                    if [ ! -d "${VENV_PATH}" ]; then
+                        python3 -m venv ${VENV_PATH}
+                    fi
+                    """
+                    // התקנת pytest (תוכל להוסיף חבילות נוספות כאן)
+                    sh """
+                    source ${VENV_PATH}/bin/activate
+                    pip install --upgrade pip
+                    pip install pytest
+                    """
+                }
+            }
+        }
+
         stage('Build') {
             steps {
-                echo 'Building the project...'
-                // ריצה של קוד Python
-                sh 'python3 app.py'
+                script {
+                    // הפעלת הפקודות הנדרשות כדי לבנות את הפרויקט שלך
+                    sh """
+                    source ${VENV_PATH}/bin/activate
+                    python3 app.py
+                    """
+                }
             }
         }
+
         stage('Test') {
             steps {
-                echo 'Running tests...'
-                // הרצת בדיקות עם pytest
-                sh 'pytest --maxfail=1 --disable-warnings -q'  // --maxfail=1 מגביל את הבדיקות ל-1 כישלון בלבד
+                script {
+                    // הפעלת בדיקות עם pytest
+                    sh """
+                    source ${VENV_PATH}/bin/activate
+                    pytest --maxfail=1 --disable-warnings -q
+                    """
+                }
             }
         }
+
         stage('Deploy') {
             steps {
+                // אם יש צורך, אפשר להוסיף שלב דיפלוי כאן
                 echo 'Deploying the app...'
-                // כאן תוכל להוסיף את הפקודות כדי להעלות את האפליקציה לשרת או לעזור לה להפעיל בסביבה אחרת
-                echo 'App deployed successfully!'
             }
+        }
+    }
+    
+    post {
+        always {
+            // הסרת הסביבה הוירטואלית בסוף כדי לא להשאיר שאריות
+            echo 'Cleaning up...'
+            sh "deactivate"
         }
     }
 }

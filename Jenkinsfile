@@ -18,8 +18,8 @@ pipeline {
         stage('Test') {
             steps {
                 echo 'Running tests...'
-                // בדיקה פשוטה (במקום הרצת Test אמיתי, אנחנו פשוט כותבים שהכל בסדר)
-                echo 'Test passed!'  // פה ניתן להוסיף קוד לבדיקות מתקדמות אם יש צורך
+                // הרצת בדיקות עם pytest
+                sh 'pytest --maxfail=1 --disable-warnings -q'  // --maxfail=1 מגביל את הבדיקות ל-1 כישלון בלבד
             }
         }
         stage('Deploy') {

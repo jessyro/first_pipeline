@@ -1,6 +1,6 @@
 # app.py
 def hello():
-    print("Hello, Jenkins!")
+    return "Hello, Jenkins!"  # החזר את הפלט כערך, במקום להדפיס אותו
 
 if __name__ == "__main__":
-    hello()
+    print(hello())  # אם אתה רוצה להדפיס את הפלט, תוכל לקרוא ל-hello()

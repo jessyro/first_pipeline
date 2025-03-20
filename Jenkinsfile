@@ -5,7 +5,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 // שולף את הקוד מ-GitHub
-                git 'https://github.com/jessyro/first_pipeline.git'  // החלף ב-URL של ה-repository שלך
+                git url: 'https://github.com/jessyro/first_pipeline.git', branch: 'main'  // החלף ב-URL של ה-repository שלך
             }
         }
         stage('Build') {

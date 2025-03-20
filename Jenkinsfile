@@ -25,7 +25,7 @@ pipeline {
                     """
                     // התקנת pytest (תוכל להוסיף חבילות נוספות כאן)
                     sh """
-                    source ${VENV_PATH}/bin/activate
+                    . ${VENV_PATH}/bin/activate
                     pip install --upgrade pip
                     pip install pytest
                     """
@@ -38,7 +38,7 @@ pipeline {
                 script {
                     // הפעלת הפקודות הנדרשות כדי לבנות את הפרויקט שלך
                     sh """
-                    source ${VENV_PATH}/bin/activate
+                    . ${VENV_PATH}/bin/activate
                     python3 app.py
                     """
                 }
@@ -50,7 +50,7 @@ pipeline {
                 script {
                     // הפעלת בדיקות עם pytest
                     sh """
-                    source ${VENV_PATH}/bin/activate
+                    . ${VENV_PATH}/bin/activate
                     pytest --maxfail=1 --disable-warnings -q
                     """
                 }
@@ -69,7 +69,7 @@ pipeline {
         always {
             // הסרת הסביבה הוירטואלית בסוף כדי לא להשאיר שאריות
             echo 'Cleaning up...'
-            sh "deactivate"
+            sh ". ${VENV_PATH}/bin/activate && deactivate"
         }
     }
 }

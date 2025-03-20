@@ -12,7 +12,7 @@ pipeline {
             steps {
                 echo 'Building the project...'
                 // ריצה של קוד Python
-                sh 'python app.py'
+                sh 'python3 app.py'
             }
         }
         stage('Test') {
